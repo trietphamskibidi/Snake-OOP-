@@ -17,26 +17,30 @@ public:
 class snake
 {
 public:
-  deque<Vector2> body;
-};
-class head
-{public:
-    Vector2 headpos;
-    void Draw()
+  float vy=0.125;
+  deque<Vector2> snake={Vector2{20,21},Vector2{20,22},Vector2{20,23}};
+  void Draw()
+  { DrawCircle(snake[0].x*cellsize,snake[0].y*cellsize,10,RED);
+    for (int i=1; i<snake.size();i++)
     {
-     DrawCircle((headpos.x)*cellsize,(headpos.y)*cellsize,10,RED);
+    int x=snake[i].x;
+    int y=snake[i].y;
+    DrawRectangle(x*cellsize,y*cellsize,cellsize,cellsize,ORANGE);
     }
-
+  };
+  void moving()
+  {
+    for (int i=0;i<snake.size();i++)
+    {
+        snake[i].y-=vy;
+    }
+  }
 };
 
 int main () {
-
-    food Food;
-    head Head;
-    Head.headpos.x=20;
-    Head.headpos.y=20;
-    float v_y=0.125;
     
+    snake body;
+    food Food;
 
     cout << "Hello World" << endl;
 
@@ -47,22 +51,18 @@ int main () {
 
     while (WindowShouldClose() == false)
     {  
-
-        Head.headpos.y-=v_y;
+        
+        
+       
         BeginDrawing();
         ClearBackground(BLACK);
+        body.moving();
+        body.Draw();
         Rectangle borderfake={100,100,620,620};
         DrawRectangleLinesEx(borderfake,20,WHITE); 
-        Head.Draw();
         Food.Draw();
         EndDrawing();
 
     }
-
-
-   
-       
-    
-
     CloseWindow();
 }
