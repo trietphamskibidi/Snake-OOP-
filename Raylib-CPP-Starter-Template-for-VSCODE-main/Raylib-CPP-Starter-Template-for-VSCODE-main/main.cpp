@@ -5,6 +5,7 @@
 using namespace std;
 int cellsize=20;
 int cellcount=40;
+float countingtime=0;
 class food
 {
 public:
@@ -17,10 +18,10 @@ public:
 class snake
 {
 public:
-  float vy=0.125;
+  float vy=1;
   deque<Vector2> snake={Vector2{20,21},Vector2{20,22},Vector2{20,23}};
   void Draw()
-  { DrawCircle(snake[0].x*cellsize,snake[0].y*cellsize,10,RED);
+  { DrawRectangle(snake[0].x*cellsize,snake[0].y*cellsize,cellsize,cellsize, ORANGE);
     for (int i=1; i<snake.size();i++)
     {
     int x=snake[i].x;
@@ -56,7 +57,12 @@ int main () {
        
         BeginDrawing();
         ClearBackground(BLACK);
+        if(GetTime()-countingtime>=0.8)
+    {
+        countingtime=GetTime();
         body.moving();
+    }
+
         body.Draw();
         Rectangle borderfake={100,100,620,620};
         DrawRectangleLinesEx(borderfake,20,WHITE); 
