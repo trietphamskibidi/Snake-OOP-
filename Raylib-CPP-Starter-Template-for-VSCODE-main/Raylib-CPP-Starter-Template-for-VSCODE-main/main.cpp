@@ -6,6 +6,7 @@ using namespace std;
 int cellsize=20;
 int cellcount=40;
 float countingtime=0;
+int movementtracking=0;
 class food
 {
 public:
@@ -29,12 +30,29 @@ public:
     DrawRectangle(x*cellsize,y*cellsize,cellsize,cellsize,ORANGE);
     }
   };
-  void moving()
+  void movingup()
   {
-    for (int i=0;i<snake.size();i++)
-    {
-        snake[i].y-=vy;
-    }
+    snake.pop_back();
+    snake.push_front({snake[0].x,(snake[0].y)-1});
+    movementtracking=0;
+  };
+  void movingdown()
+  {
+    snake.pop_back();
+    snake.push_front({snake[0].x,(snake[0].y)+1});
+    movementtracking=1;
+  }
+  void movingleft()
+  {
+    snake.pop_back();
+    snake.push_front({(snake[0].x)-1,snake[0].y});
+    movementtracking=2;
+  }
+  void movingright()
+  {
+   snake.pop_back();
+    snake.push_front({(snake[0].x)+1,snake[0].y});
+    movementtracking=3;
   }
 };
 
@@ -52,23 +70,29 @@ int main () {
 
     while (WindowShouldClose() == false)
     {  
-        
-        
-       
         BeginDrawing();
         ClearBackground(BLACK);
-        if(GetTime()-countingtime>=0.8)
-    {
-        countingtime=GetTime();
-        body.moving();
-    }
 
-        body.Draw();
+        if (IsKeyPressed(KEY_W) and movementtracking !=1)
+        {
+            body.movingup();
+        }
+        if(IsKeyPressed(KEY_A) and movementtracking!=3)
+        {
+            body.movingleft();
+        }
+        if(IsKeyPressed(KEY_S) and movementtracking!=0)
+        {
+            body.movingdown();
+        }
+        if(IsKeyPressed(KEY_D) and movementtracking!=2)
+        {
+            body.movingright();
+        }
+    body.Draw();
         Rectangle borderfake={100,100,620,620};
         DrawRectangleLinesEx(borderfake,20,WHITE); 
         Food.Draw();
         EndDrawing();
-
     }
-    CloseWindow();
 }
