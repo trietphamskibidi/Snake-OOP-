@@ -35,11 +35,17 @@ public:
         DrawRectangle(x*cellsize,y*cellsize,cellsize,cellsize,ORANGE);
     }
   };
+
   void move()
   { 
     snake.pop_back();
     snake.push_front(Vector2Add(snake[0],direction));
   }
+  void grow()
+{
+    snake.push_back(Vector2Subtract(snake.back(),direction));
+  }
+  
 };
 
 int main () {
@@ -64,11 +70,13 @@ int main () {
         if (IsKeyPressed(KEY_S) && direction.y != -1 && pendingDirection.y != -1) pendingDirection = {0, 1};
         if (IsKeyPressed(KEY_D) && direction.x != -1 && pendingDirection.x != -1) pendingDirection = {1, 0};
 
-        if (GetTime()-countingtime>=0.25)
+        if (GetTime()-countingtime>=0.1)
         {
             countingtime=GetTime();
             direction=pendingDirection;
             body.move();
+            if (body.snake[0].x == Food.foodpos.x && body.snake[0].y == Food.foodpos.y)
+            body.grow();
         }
         
         body.Draw();
