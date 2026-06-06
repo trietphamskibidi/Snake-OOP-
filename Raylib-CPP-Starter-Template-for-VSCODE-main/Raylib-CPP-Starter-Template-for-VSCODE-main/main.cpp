@@ -14,9 +14,19 @@ class food
 {
 public:
     Vector2 foodpos;
+    food()
+    {
+        foodpos.x=GetRandomValue(6,35);
+        foodpos.y=GetRandomValue(6,35);
+    }
     void Draw()
     {
         DrawRectangle((foodpos.x)*cellsize,(foodpos.y)*cellsize,cellsize,cellsize,WHITE);
+    }
+    void geteaten()
+    {
+        foodpos.x=GetRandomValue(6,34);
+        foodpos.y=GetRandomValue(6,34);
     }
 };
 
@@ -44,7 +54,29 @@ public:
   void grow()
 {
     snake.push_back(Vector2Subtract(snake.back(),direction));
+}
+  void check()
+
+  {
+    for (int i=1;i<snake.size(); i++)
+     {
+       if (snake[0].x==snake[i].x and snake[0].y==snake[i].y)
+        {
+            snake={Vector2{20,21},Vector2{20,22},Vector2{20,23}};
+            pendingDirection={0,-1};
+    direction={0,-1};
+    
+        }
+     }
+     if(snake[0].x>34 || snake[0].x<6||snake[0].y<6||snake[0].y>34)
+     {
+       snake={Vector2{20,21},Vector2{20,22},Vector2{20,23}};
+       pendingDirection={0,-1};
+    direction={0,-1};
+     }
   }
+  
+
   
 };
 
@@ -57,11 +89,9 @@ int main () {
 
     InitWindow(cellsize*cellcount,cellsize*cellcount, "My first RAYLIB program!");
     SetTargetFPS(60);
-    Food.foodpos.x=GetRandomValue(6,35);
-    Food.foodpos.y=GetRandomValue(6,35);
 
     while (WindowShouldClose() == false)
-    {  
+    {
         BeginDrawing();
         ClearBackground(BLACK);
 
@@ -69,15 +99,18 @@ int main () {
         if (IsKeyPressed(KEY_A) && direction.x != 1  && pendingDirection.x != 1)  pendingDirection = {-1,0};
         if (IsKeyPressed(KEY_S) && direction.y != -1 && pendingDirection.y != -1) pendingDirection = {0, 1};
         if (IsKeyPressed(KEY_D) && direction.x != -1 && pendingDirection.x != -1) pendingDirection = {1, 0};
-
         if (GetTime()-countingtime>=0.1)
         {
             countingtime=GetTime();
             direction=pendingDirection;
             body.move();
             if (body.snake[0].x == Food.foodpos.x && body.snake[0].y == Food.foodpos.y)
-            body.grow();
+            {
+                body.grow();
+                Food.geteaten();
+            }
         }
+        body.check();
         
         body.Draw();
         Rectangle borderfake={100,100,620,620};
